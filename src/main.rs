@@ -1,10 +1,15 @@
 use sqlx::sqlite::SqlitePoolOptions;
+use std::env;
+use dotenvy::dotenv;
 
 #[tokio::main]
 async fn main() {
-    let db_url = "sqlite:./database.db"; // ou em memória: "sqlite::memory:"
-    let _pool = SqlitePoolOptions::new()
-        .connect(db_url)
+    
+    dotenv().ok();
+    let db_url = env::var("DATABASE_URL").expect("DATABASE_URL não encontrada")
+
+    let _pool = PgPoolOptions::new()
+        .connect(&db_url)
         .await
         .expect("Erro ao conectar com SQLite");
 
